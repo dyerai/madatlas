@@ -86,6 +86,7 @@ app.post("/api/search/:from-:to", (req, res) => {
   // ethnic studies
   if (body.filters.ethnic) {
     sql += ` ${j > 0 ? "AND": "WHERE"} counts_as_ethnic_studies=1`
+    j++;
   }
 
   // breadth
