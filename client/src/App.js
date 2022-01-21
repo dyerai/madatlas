@@ -27,18 +27,6 @@ function App() {
   };
   const [payload, setPayload] = React.useState(defaultPayload);
 
-  const getCourses = (courseData) => {
-    setCourses(courseData);
-  };
-
-  const getPage = (pageData) => {
-    setPage(pageData);
-  };
-
-  const getNumPages = (numPageData) => {
-    setNumPages(numPageData);
-  };
-
   const getPayload = (payloadData) => {
     setPayload(payloadData);
   };
@@ -52,8 +40,7 @@ function App() {
   React.useEffect(() => {
     setPage(1);
     isNewQuery ? setIsNewQuery(false) : setIsNewQuery(true);
-  }, [payload])
-
+  }, [payload]);
 
   // TODO: fix pagination lagging
   React.useEffect(() => {
@@ -66,13 +53,12 @@ function App() {
     })
       .then((res) => res.json())
       .then((result) => {
-        getCourses(result);
+        setCourses(result);
 
         let numResults = 0;
         numResults = result.pop().results;
-        getNumPages(Math.ceil(numResults / 50));
+        setNumPages(Math.ceil(numResults / 50));
       });
-    
   }, [page, isNewQuery]);
 
   function handleNextClick() {
@@ -87,13 +73,7 @@ function App() {
     <div style={{ overflow: "hidden" }}>
       <Row>
         <Col className="ms-3">
-          <CourseSearch
-            getCourses={getCourses}
-            getPage={getPage}
-            getNumPages={getNumPages}
-            page={page}
-            getPayload={getPayload}
-          />
+          <CourseSearch setPayload={getPayload} />
         </Col>
         <Col>
           <Row>
@@ -101,7 +81,7 @@ function App() {
           </Row>
           <Row>
             <p>
-              Page {page} of {numPages}
+              Page {numPages === 0 ? numPages : page} of {numPages}
             </p>
             <Button as={Col} onClick={handlePrevClick}>
               Previous Page

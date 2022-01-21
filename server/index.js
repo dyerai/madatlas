@@ -54,13 +54,25 @@ app.post("/api/search/:from-:to", (req, res) => {
     "%Physical Sci. Counts toward the Natural Sci req%",
     "%Social Science%",
   ];
+  const combinators = [
+    "AND",
+    "OR",
+    "AND NOT",
+  ];
 
-  let from = req.params.from;
-  let to = req.params.to;
+  const from = req.params.from;
+  const to = req.params.to;
 
-  let body_genEds = [body.filters.commA, body.filters.commB, body.filters.quantA, body.filters.quantB];
-  let body_breadth = [body.filters.bio, body.filters.human, body.filters.lit, body.filters.natSci, body.filters.phySci, body.filters.socSci];
+  const body_genEds = [body.filters.commA, body.filters.commB, body.filters.quantA, body.filters.quantB];
+  const body_breadth = [body.filters.bio, body.filters.human, body.filters.lit, body.filters.natSci, body.filters.phySci, body.filters.socSci];
+  let combinator = "AND";
 
+  if (typeof body.combinator !== "undefined") {
+    const body_combinator = [body.combinator.and, body.combinator.or, body.combinator.andNot];
+    for (let i = 0; i < body_combinator.length; i++) {
+      if (body_combinator[i]) combinator = combinators[i];
+    }
+  }
 
   let sql = "SELECT * FROM courses c";
   let params = [];
@@ -77,7 +89,7 @@ app.post("/api/search/:from-:to", (req, res) => {
     for (let i = 0; i < body_genEds.length; i++) {
       if (body_genEds[i]) params.push(genEd[i]);
       if (j < numTrue) {
-        sql += " AND gen_ed LIKE ?";
+        sql += ` ${combinator} gen_ed LIKE ?`;
         j++;
       }
     }
@@ -85,20 +97,20 @@ app.post("/api/search/:from-:to", (req, res) => {
 
   // ethnic studies
   if (body.filters.ethnic) {
-    sql += ` ${j > 0 ? "AND": "WHERE"} counts_as_ethnic_studies=1`
+    sql += ` ${j > 0 ? combinator: "WHERE"} counts_as_ethnic_studies=1`
     j++;
   }
 
   // breadth
   if (body_breadth.includes(true)) {
-    sql += ` ${j > 0 ? "AND": "WHERE"} breadth LIKE ?`;
+    sql += ` ${j > 0 ? combinator: "WHERE"} breadth LIKE ?`;
     j++;
     let numTrue = body_breadth.filter((g) => g == true).length;
 
     for (let i = 0; i < body_breadth.length; i++) {
       if (body_breadth[i]) params.push(breadth[i]);
       if (j < numTrue) {
-        sql += " AND breadth LIKE ?";
+        sql += ` ${combinator} breadth LIKE ?`;
         j++;
       }
     }

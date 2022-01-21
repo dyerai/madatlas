@@ -1,5 +1,4 @@
 import { Row, ListGroup, Container } from "react-bootstrap";
-import { Link } from "react-router-dom";
 
 export default function CourseList({ courses }) {
   if (courses?.length > 0) {
@@ -7,7 +6,7 @@ export default function CourseList({ courses }) {
       <ListGroup style={{ overflowY: "scroll", maxHeight: "85vh" }}>
         {courses?.map((course) => {
           return (
-            <ListGroup.Item key={`course${course.id}`}>
+            <ListGroup.Item key={`course-${course.id}`}>
               <Row>
                 <b>{course.abbrev}</b>
               </Row>
@@ -25,7 +24,7 @@ export default function CourseList({ courses }) {
             position: "absolute",
             top: "50%",
             left: "50%",
-            transform: "translate(-50%, -50%)"
+            transform: "translate(-50%, -50%)",
           }}
         >
           No Courses Found!

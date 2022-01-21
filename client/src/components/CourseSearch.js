@@ -2,83 +2,43 @@ import React from "react";
 import { Form, Button } from "react-bootstrap";
 import ComplexSearchModal from "./ComplexSearchModal";
 
-export default function CourseSearch({
-  getCourses,
-  getPage,
-  getNumPages,
-  page,
-  getPayload,
-}) {
+export default function CourseSearch({ setPayload }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(e);
     let payload = null;
 
-    if (!isComplex) {
-      console.log('in not complex');
-      payload = {
-        filters: {
-          bio: e.target[0].checked,
-          human: e.target[1].checked,
-          lit: e.target[2].checked,
-          natSci: e.target[3].checked,
-          phySci: e.target[4].checked,
-          socSci: e.target[5].checked,
-          commA: e.target[6].checked,
-          commB: e.target[7].checked,
-          quantA: e.target[8].checked,
-          quantB: e.target[9].checked,
-          ethnic: e.target[10].checked,
-        },
-      };
-    }
-    else if (isComplex) {
-      payload = {
-        filters: {
-          bio: e.target[0].checked,
-          human: e.target[1].checked,
-          lit: e.target[2].checked,
-          natSci: e.target[3].checked,
-          phySci: e.target[4].checked,
-          socSci: e.target[5].checked,
-          commA: e.target[10].checked,
-          commB: e.target[11].checked,
-          quantA: e.target[12].checked,
-          quantB: e.target[13].checked,
-          ethnic: e.target[14].checked,
-        },
-        combinator: {
-          and: e.target[6].checked,
-          or: e.target[7].checked,
-          andNot: e.target[8].checked,
-          orNot: e.target[9].checked,
-        }
-      };
-    }
-    getPayload(payload);
-  };
-  const handleButtonClick = (e) => {
-    setComplex(false);
-    handleSubmit(e);
+    payload = {
+      filters: {
+        bio: e.target[0].checked,
+        human: e.target[1].checked,
+        lit: e.target[2].checked,
+        natSci: e.target[3].checked,
+        phySci: e.target[4].checked,
+        socSci: e.target[5].checked,
+        commA: e.target[6].checked,
+        commB: e.target[7].checked,
+        quantA: e.target[8].checked,
+        quantB: e.target[9].checked,
+        ethnic: e.target[10].checked,
+      },
+    };
+
+    setPayload(payload);
   };
 
   const [show, setShow] = React.useState(false);
-  const [isComplex, setComplex] = React.useState(false);
-  const [formData, setFormData] = React.useState(null);
-  
+
   const handleOpen = () => {
     setShow(true);
   };
   const handleClose = () => {
     setShow(false);
   };
-  const handleComplex = () => {
-    setComplex(true);
-  };
 
   return (
     <>
-      <Form onSubmit={handleButtonClick}>
+      <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
           <Form.Label>Breadth</Form.Label>
           <Form.Check id="0" label="Biological Sciences" name="bio" />
@@ -107,13 +67,7 @@ export default function CourseSearch({
           </Button>
         </Form.Group>
       </Form>
-      <ComplexSearchModal
-        show={show}
-        close={handleClose}
-        handleSubmit={handleSubmit}
-        setComplex={handleComplex}
-        complex={isComplex}
-      />
+      <ComplexSearchModal show={show} close={handleClose} setPayload={setPayload} />
     </>
   );
 }

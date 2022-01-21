@@ -1,69 +1,107 @@
+/* eslint-env jquery */
+import React from "react";
 import { Button, Col, Row, Form, Modal } from "react-bootstrap";
 
-export default function ComplexSearchModal({ show, close, handleSubmit, setComplex }) {
-  const handleClick = (e) => {
-    console.log('in handle');
+export default function ComplexSearchModal({ show, close, setPayload }) {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     close();
-    setComplex(true);
-    handleSubmit(e);
+
+    const payload = {
+      filters: {
+        bio: false,
+        human: false,
+        lit: false,
+        natSci: false,
+        phySci: false,
+        socSci: false,
+        commA: false,
+        commB: false,
+        quantA: false,
+        quantB: false,
+        ethnic: false,
+      },
+      combinator: {
+        and: false,
+        or: false,
+        andNot: false,
+      },
+    };
+
+    payload.filters[e.target[0].value] = true;
+    payload.combinator[e.target[1].value === "and not" ? "andNot" : e.target[1].value] = true;
+    payload.filters[e.target[2].value] = true;
+    console.log(payload.combinator);
+    setPayload(payload);
+  };
+
+  const hideSelectOption = () => {
+    document.querySelectorAll('option').forEach((option) => option.removeAttribute('disabled'));
+    document.querySelectorAll('select.reqSelector').forEach((select) => {
+      let selected = select.selectedIndex;
+      if (select.id === "select-1") {
+        document.getElementById('select-2').options[selected].setAttribute('disabled', 'true');
+      }
+      else if (select.id === 'select-2') {
+        document.getElementById('select-1').options[selected].setAttribute('disabled', 'true');
+      }
+    });
   };
 
   return (
     <Modal show={show} size="lg" centered onHide={close}>
-      <Modal.Header>Hello</Modal.Header>
-      <Form onSubmit={handleClick}>
+      <Modal.Header>I'm looking for a course that is...</Modal.Header>
+      <Form onSubmit={handleSubmit}>
         <Modal.Body as={Row}>
           <Col>
-            <Form.Group className="mb-3">
-              <Form.Label>Breadth</Form.Label>
-              <Form.Check id="c0" label="Biological Sciences" name="bio" />
-              <Form.Check id="c1" label="Humanities" name="human" />
-              <Form.Check id="c2" label="Literature" name="lit" />
-              <Form.Check id="c3" label="Natural Sciences" name="natSci" />
-              <Form.Check id="c4" label="Physical Sciences" name="phySci" />
-              <Form.Check id="c5" label="Social Sciences" name="socSci" />
+            <Form.Group>
+              <Form.Select className="reqSelector" id="select-1" onChange={hideSelectOption}>
+                <optgroup label="Breadth">
+                  <option value="bio">Biological Sciences</option>
+                  <option value="human" disabled>Humanities</option>
+                  <option value="lit">Literature</option>
+                  <option value="natSci">Natural Sciences</option>
+                  <option value="phySci">Physical Sciences</option>
+                  <option value="socSci">Social Sciences</option>
+                </optgroup>
+                <optgroup label="General Education">
+                  <option value="commA">Communication A</option>
+                  <option value="commB">Communication B</option>
+                  <option value="quantA">Quantitative Reasoning A</option>
+                  <option value="quantB">Quantitative Reasoning B</option>
+                  <option value="ethnic">Ethnic Studies</option>
+                </optgroup>
+              </Form.Select>
             </Form.Group>
           </Col>
           <Col>
-            <Form.Group className="mt-5 ms-5">
-              <Form.Check
-                id="crand"
-                type="radio"
-                label="and"
-                name="radioGroup"
-                defaultChecked
-              />
-              <Form.Check id="cror" type="radio" label="or" name="radioGroup" />
-              <Form.Check
-                id="crandnot"
-                type="radio"
-                label="and not"
-                name="radioGroup"
-              />
-              <Form.Check
-                id="crornot"
-                type="radio"
-                label="or not"
-                name="radioGroup"
-              />
+            <Form.Group>
+              <Form.Select>
+                <option>and</option>
+                <option>or</option>
+                <option>and not</option>
+              </Form.Select>
             </Form.Group>
           </Col>
           <Col>
-            <Form.Group className="mb-3">
-              <Form.Label>General Education</Form.Label>
-              <Form.Check id="ci0" label="Communication A" name="commA" />
-              <Form.Check id="ci1" label="Communication B" name="commB" />
-              <Form.Check
-                id="ci2"
-                label="Quantitative Reasoning A"
-                name="quantA"
-              />
-              <Form.Check
-                id="ci3"
-                label="Quantitative Reasoning B"
-                name="quantB"
-              />
-              <Form.Check id="ci4" label="Ethnic Studies" name="ethnic" />
+            <Form.Group>
+              <Form.Select className="reqSelector" id="select-2" defaultValue="human" onChange={hideSelectOption}>
+                <optgroup label="Breadth">
+                  <option value="bio" disabled>Biological Sciences</option>
+                  <option value="human">Humanities</option>
+                  <option value="lit">Literature</option>
+                  <option value="natSci">Natural Sciences</option>
+                  <option value="phySci">Physical Sciences</option>
+                  <option value="socSci">Social Sciences</option>
+                </optgroup>
+                <optgroup label="General Education">
+                  <option value="commA">Communication A</option>
+                  <option value="commB">Communication B</option>
+                  <option value="quantA">Quantitative Reasoning A</option>
+                  <option value="quantB">Quantitative Reasoning B</option>
+                  <option value="ethnic">Ethnic Studies</option>
+                </optgroup>
+              </Form.Select>
             </Form.Group>
           </Col>
         </Modal.Body>
