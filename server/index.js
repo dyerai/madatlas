@@ -60,6 +60,7 @@ app.post("/api/search/:from-:to", (req, res) => {
     "AND NOT",
   ];
 
+
   const from = req.params.from;
   const to = req.params.to;
 
@@ -74,10 +75,16 @@ app.post("/api/search/:from-:to", (req, res) => {
     }
   }
 
-  let sql = "SELECT * FROM courses c";
+  let sql = "SELECT * FROM courses";
   let params = [];
 
   let j = 0;
+
+  // subject
+  if (body.filters.subject != '0') {
+    sql += " INNER JOIN course_subjects ON course_subjects.course_id = courses.id AND course_subjects.subject_id = ?";
+    params.push(body.filters.subject);
+  }
 
   // gen eds
   if (body_genEds.includes(true)) {
@@ -118,9 +125,18 @@ app.post("/api/search/:from-:to", (req, res) => {
 
   console.log(sql);
   console.log(params);
-  let numResults = db.prepare(`SELECT COUNT(*) FROM courses ${sql.replace("SELECT * FROM courses c", "")}`).get(params);
+
+  let numResults = db.prepare(`SELECT COUNT(*) FROM courses ${sql.replace("SELECT * FROM courses", "")}`).get(params);
   params.push(from, to);
+  
+  sql += " ORDER BY number";
   let courses = db.prepare(sql += " LIMIT ?,?").all(params);
+
+  courses.forEach((course) => {
+    let credits = db.prepare("SELECT DISTINCT credits FROM courses WHERE abbrev = ?").all(course.abbrev).map((row) => row.credits);
+    course.credits = credits;
+  })
+  //console.log(courses[0])
   courses.push({"results": numResults['COUNT(*)']})
   res.json(courses);
 });
