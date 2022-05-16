@@ -42,7 +42,7 @@ export default function ComplexSearchModal({ show, close, setPayload }) {
       if (select.id === "select-1") {
         document.getElementById('select-2').options[selected].setAttribute('disabled', 'true');
       }
-      else if (select.id === 'select-2') {
+      else if (select.id === "select-2") {
         document.getElementById('select-1').options[selected].setAttribute('disabled', 'true');
       }
     });
@@ -50,7 +50,7 @@ export default function ComplexSearchModal({ show, close, setPayload }) {
 
   return (
     <Modal show={show} size="lg" centered onHide={close}>
-      <Modal.Header>I'm looking for a course that is...</Modal.Header>
+      <Modal.Header>I'm looking for a course that fufills...</Modal.Header>
       <Form onSubmit={handleSubmit}>
         <Modal.Body as={Row}>
           <Col>
@@ -107,7 +107,7 @@ export default function ComplexSearchModal({ show, close, setPayload }) {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" type="submit">
-            Submit
+            Search
           </Button>
         </Modal.Footer>
       </Form>

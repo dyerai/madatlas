@@ -1,8 +1,8 @@
 import React from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, FormSelect, Container } from "react-bootstrap";
 import ComplexSearchModal from "./ComplexSearchModal";
 
-export default function CourseSearch({ setPayload }) {
+export default function CourseSearch({ setPayload, subjects }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(e);
@@ -21,6 +21,7 @@ export default function CourseSearch({ setPayload }) {
         quantA: e.target[8].checked,
         quantB: e.target[9].checked,
         ethnic: e.target[10].checked,
+        subject: e.target[11].value
       },
     };
 
@@ -37,7 +38,7 @@ export default function CourseSearch({ setPayload }) {
   };
 
   return (
-    <>
+    <Container style={{marginTop: 4 + 'em'}} className="ms-3">
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
           <Form.Label>Breadth</Form.Label>
@@ -58,6 +59,18 @@ export default function CourseSearch({ setPayload }) {
           <Form.Check id="i4" label="Ethnic Studies" name="ethnic" />
         </Form.Group>
 
+        <Form.Group className="mb-3" style={{width: "13em"}}>
+          <Form.Label>Subject</Form.Label>
+          <FormSelect>
+            <option value="0">Any</option>
+            {subjects?.map((subject) => {
+              return (
+                <option value={subject.id}>{subject.name}</option>
+              );
+            })}
+          </FormSelect>
+        </Form.Group>
+
         <Form.Group>
           <Button type="submit">Search</Button>
         </Form.Group>
@@ -68,6 +81,6 @@ export default function CourseSearch({ setPayload }) {
         </Form.Group>
       </Form>
       <ComplexSearchModal show={show} close={handleClose} setPayload={setPayload} />
-    </>
+    </Container>
   );
 }
