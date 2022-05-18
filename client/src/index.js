@@ -5,7 +5,9 @@ import './index.css';
 import App from './App';
 import SubjectPage from './routes/SubjectPage';
 import ClassPage from './routes/ClassPage';
+import NotFound from './routes/NotFound'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Login from './routes/Login';
 
 
 
@@ -15,6 +17,8 @@ ReactDOM.render(
       <Route path="/" element={<App />} />
       <Route path="subject" element={<SubjectPage />} />
       <Route path="class" element={<ClassPage />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   </BrowserRouter>,
   document.getElementById("root")
