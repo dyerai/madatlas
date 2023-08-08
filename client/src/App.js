@@ -7,6 +7,8 @@ import CourseList from "./components/CourseList";
 import CoursePage from "./components/CoursePage";
 import MadatlasNavbar from "./components/MadatlasNavbar";
 
+
+// TODO: create login modal
 function App() {
   const [page, setPage] = React.useState(1);
   const [numPages, setNumPages] = React.useState(0);
@@ -29,8 +31,9 @@ function App() {
       quantB: false,
       ethnic: false,
       subject: "0",
-    },
+    }
   };
+
   const [payload, setPayload] = React.useState(defaultPayload);
 
   const getPayload = (payloadData) => {
@@ -41,16 +44,15 @@ function App() {
     setCurrentCourse(courseData);
   };
 
-  React.useEffect(() => {
-    fetch("/api/getNumCourses")
-      .then((res) => res.json())
-      .then((result) => setNumPages(Math.ceil(result["COUNT(*)"] / 50)));
-  }, []);
-
+  // On first render
   React.useEffect(() => {
     fetch("/api/getSubjects")
       .then((res) => res.json())
       .then((result) => setSubjects(result));
+
+    fetch("/api/getNumCourses")
+      .then((res) => res.json())
+      .then((result) => setNumPages(Math.ceil(result / 50)));
   }, []);
 
   React.useEffect(() => {
@@ -90,13 +92,13 @@ function App() {
       <MadatlasNavbar />
       <div style={{background: "#f7f7f7"}}>
         <Row>
-          <Col>
+          <Col md="auto">
             <CourseSearch setPayload={getPayload} subjects={subjects} />
           </Col>
-          <Col style={{background: "#fdfdfd"}}>
+          <Col style={{background: "#fdfdfd"}} lg={6}>
             <CoursePage course={currentCourse} />
           </Col>
-          <Col>
+          <Col style={{maxWidth: "29%"}}>
             <Row>
               <CourseList courses={courses} setCourse={getCourse} />
             </Row>

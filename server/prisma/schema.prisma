@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../data.db"
+}
+
+model Course {
+  id                           Int             @id @default(autoincrement())
+  abbrev                       String
+  name                         String
+  number                       Int
+  description                  String?
+  credits                      String
+  requisites                   String?
+  counts_as_LS_credit          Boolean
+  breadth                      String?
+  level                        String?
+  gen_ed                       String?
+  counts_as_ethnic_studies     Boolean
+  counts_toward_50percent_grad Boolean
+  repeatable                   Boolean
+  lastTaught                   String?
+  CourseSection                CourseSection[]
+  Subject                      Subject[]
+}
+
+model Subject {
+  id     Int      @id @default(autoincrement())
+  name   String
+  abbrev String
+  code   Int
+  Course Course[]
+}
+
+model CourseSection {
+  id           Int        @id @default(autoincrement())
+  CourseId     Int
+  InstructorId Int
+  Course       Course     @relation(fields: [CourseId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Instructor   Instructor @relation(fields: [InstructorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Instructor {
+  id            Int             @id @default(autoincrement())
+  name          String
+  CourseSection CourseSection[]
+}

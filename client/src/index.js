@@ -8,19 +8,22 @@ import ClassPage from './routes/ClassPage';
 import NotFound from './routes/NotFound'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './routes/Login';
-
+import store from './app/store'
+import { Provider } from 'react-redux';
 
 
 ReactDOM.render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<App />} />
-      <Route path="subject" element={<SubjectPage />} />
-      <Route path="class" element={<ClassPage />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-  </BrowserRouter>,
+  <Provider store={store}>
+      <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="subject" element={<SubjectPage />} />
+        <Route path="class" element={<ClassPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
+  </Provider>,
   document.getElementById("root")
 );
 

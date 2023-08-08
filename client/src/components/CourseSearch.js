@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button, FormSelect, Container } from "react-bootstrap";
+import { Form, Button, FormSelect, Container, Row, Col } from "react-bootstrap";
 import ComplexSearchModal from "./ComplexSearchModal";
 
 export default function CourseSearch({ setPayload, subjects }) {
@@ -7,6 +7,7 @@ export default function CourseSearch({ setPayload, subjects }) {
     e.preventDefault();
     console.log(e);
     let payload = null;
+
 
     payload = {
       filters: {
@@ -30,12 +31,8 @@ export default function CourseSearch({ setPayload, subjects }) {
 
   const [show, setShow] = React.useState(false);
 
-  const handleOpen = () => {
-    setShow(true);
-  };
-  const handleClose = () => {
-    setShow(false);
-  };
+  const handleOpen = () => {setShow(true)};
+  const handleClose = () => {setShow(false)};
 
   return (
     <Container style={{marginTop: 4 + 'em'}} className="ms-3">
@@ -70,15 +67,16 @@ export default function CourseSearch({ setPayload, subjects }) {
             })}
           </FormSelect>
         </Form.Group>
-
-        <Form.Group>
-          <Button type="submit">Search</Button>
-        </Form.Group>
-        <Form.Group>
-          <Button variant="link" onClick={handleOpen}>
-            Complex Search
-          </Button>
-        </Form.Group>
+        <Row>
+          <Form.Group as={Col}>
+            <Button variant="link" onClick={handleOpen}>
+              Complex Search
+            </Button>
+          </Form.Group>
+          <Form.Group as={Col}>
+            <Button type="submit" className="me-auto">Search</Button>
+          </Form.Group>
+        </Row>
       </Form>
       <ComplexSearchModal show={show} close={handleClose} setPayload={setPayload} />
     </Container>
